@@ -146,10 +146,10 @@ export function Hero() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
                 className="gradient-bg text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 gentle-animation cursor-pointer flex items-center justify-center gap-2"
               >
-                Book a Demo <ArrowRight className="w-4 h-4" />
+                Try Scanner Free <ArrowRight className="w-4 h-4" />
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.03 }}
