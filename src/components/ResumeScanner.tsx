@@ -41,8 +41,8 @@ export function ResumeScanner() {
   }, [])
 
   const analyzeResume = useCallback(async () => {
-    if (resumeText.trim().length < 20) {
-      toast.error('Please enter at least 20 characters of resume content.')
+    if (!uploadedFile && resumeText.trim().length < 20) {
+      toast.error('Please upload a PDF or enter at least 20 characters of resume content.')
       return
     }
 
@@ -50,8 +50,17 @@ export function ResumeScanner() {
     setResult(null)
 
     try {
-      const { data, error } = await supabase.functions.invoke('analyze-resume', {
-        body: { resumeText: resumeText.trim() },
+      let invokeOptions: any;
+
+      if (uploadedFile) {
+        const formData = new FormData()
+        formData.append('file', uploadedFile)
+        invokeOptions = { body: formData }
+      } else {
+        invokeOptions = { body: { resumeText: resumeText.trim() } }
+      }
+
+      const { data, error } = await supabase.functions.invoke('analyze-resume', invokeOptions)
       })
 
       if (error) {
