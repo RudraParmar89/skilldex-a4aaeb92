@@ -61,7 +61,6 @@ export function ResumeScanner() {
       }
 
       const { data, error } = await supabase.functions.invoke('analyze-resume', invokeOptions)
-      })
 
       if (error) {
         throw new Error(error.message || 'Analysis failed')
