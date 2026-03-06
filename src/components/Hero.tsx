@@ -22,7 +22,7 @@ export function Hero() {
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Capabilities', href: '#capabilities' },
     { label: 'Stats', href: '#stats' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Scanner', href: '#scanner' },
   ]
 
   return (
@@ -70,7 +70,7 @@ export function Hero() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
                 className="hidden sm:flex items-center gap-2 gradient-bg text-primary-foreground font-semibold px-5 py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer text-sm"
               >
                 Get Started <ArrowRight className="w-4 h-4" />
@@ -110,7 +110,7 @@ export function Hero() {
             </a>
           ))}
           <button
-            onClick={() => { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false) }}
+            onClick={() => { document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false) }}
             className="gradient-bg text-primary-foreground font-semibold px-6 py-3 rounded-lg mt-4 cursor-pointer"
           >
             Get Started
@@ -146,10 +146,10 @@ export function Hero() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
                 className="gradient-bg text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 gentle-animation cursor-pointer flex items-center justify-center gap-2"
               >
-                Book a Demo <ArrowRight className="w-4 h-4" />
+                Try Scanner Free <ArrowRight className="w-4 h-4" />
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.03 }}
