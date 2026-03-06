@@ -120,8 +120,8 @@ export function ResumeScanner() {
               <h3 className="text-lg font-bold text-foreground">Resume Content</h3>
               <label className="flex items-center gap-2 text-sm text-accent-indigo font-medium cursor-pointer hover:opacity-80 gentle-animation">
                 <Upload className="w-4 h-4" />
-                Upload .txt
-                <input type="file" accept=".txt" className="hidden" onChange={handleFileUpload} />
+                Upload PDF / TXT
+                <input type="file" accept=".pdf,.txt" className="hidden" onChange={handleFileUpload} />
               </label>
             </div>
 
