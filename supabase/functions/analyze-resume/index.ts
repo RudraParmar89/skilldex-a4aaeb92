@@ -6,17 +6,118 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function extractTextFromPdfBytes(bytes: Uint8Array): string {
+  const decoder = new TextDecoder("latin1");
+  const raw = decoder.decode(bytes);
+
+  const textParts: string[] = [];
+
+  // Extract text between BT and ET operators (text blocks)
+  const btEtRegex = /BT\s([\s\S]*?)ET/g;
+  let match;
+  while ((match = btEtRegex.exec(raw)) !== null) {
+    const block = match[1];
+    // Extract strings in parentheses (literal strings)
+    const parenRegex = /\(([^)]*)\)/g;
+    let strMatch;
+    while ((strMatch = parenRegex.exec(block)) !== null) {
+      textParts.push(strMatch[1]);
+    }
+    // Extract hex strings
+    const hexRegex = /<([0-9A-Fa-f]+)>/g;
+    let hexMatch;
+    while ((hexMatch = hexRegex.exec(block)) !== null) {
+      const hex = hexMatch[1];
+      let str = "";
+      for (let i = 0; i < hex.length; i += 2) {
+        const code = parseInt(hex.substring(i, i + 2), 16);
+        if (code >= 32) str += String.fromCharCode(code);
+      }
+      if (str.trim()) textParts.push(str);
+    }
+  }
+
+  // Clean up extracted text
+  let text = textParts.join(" ");
+  // Fix common PDF encoding issues
+  text = text.replace(/\\n/g, "\n").replace(/\\r/g, "").replace(/\\\(/g, "(").replace(/\\\)/g, ")").replace(/\\\\/g, "\\");
+  // Collapse excessive whitespace
+  text = text.replace(/\s+/g, " ").trim();
+
+  return text;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { resumeText } = await req.json();
+    let resumeText = "";
+
+    const contentType = req.headers.get("content-type") || "";
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await req.formData();
+      const file = formData.get("file") as File | null;
+      const text = formData.get("resumeText") as string | null;
+
+      if (file) {
+        if (file.type === "application/pdf") {
+          const arrayBuffer = await file.arrayBuffer();
+          const bytes = new Uint8Array(arrayBuffer);
+          resumeText = extractTextFromPdfBytes(bytes);
+
+          if (resumeText.trim().length < 20) {
+            // Fallback: try to use AI to extract text from base64
+            const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+            if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+
+            const base64 = btoa(String.fromCharCode(...bytes));
+            const extractResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${LOVABLE_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: "google/gemini-2.5-flash",
+                messages: [
+                  {
+                    role: "user",
+                    content: [
+                      { type: "text", text: "Extract ALL text content from this PDF document. Return only the raw text, preserving structure where possible. No commentary." },
+                      { type: "image_url", image_url: { url: `data:application/pdf;base64,${base64}` } },
+                    ],
+                  },
+                ],
+              }),
+            });
+
+            if (extractResponse.ok) {
+              const extractData = await extractResponse.json();
+              resumeText = extractData.choices?.[0]?.message?.content || "";
+            }
+          }
+        } else if (file.type === "text/plain" || file.name.endsWith(".txt")) {
+          resumeText = await file.text();
+        } else {
+          return new Response(
+            JSON.stringify({ error: "Unsupported file type. Please upload a PDF or TXT file." }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      } else if (text) {
+        resumeText = text;
+      }
+    } else {
+      const body = await req.json();
+      resumeText = body.resumeText || "";
+    }
 
     if (!resumeText || typeof resumeText !== "string" || resumeText.trim().length < 20) {
       return new Response(
-        JSON.stringify({ error: "Please provide valid resume text (at least 20 characters)." }),
+        JSON.stringify({ error: "Could not extract enough text from the file. Please try pasting your resume text directly." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -87,7 +188,6 @@ Rules:
     const data = await response.json();
     let content = data.choices?.[0]?.message?.content || "";
 
-    // Strip markdown fences if present
     content = content.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
 
     let analysis;

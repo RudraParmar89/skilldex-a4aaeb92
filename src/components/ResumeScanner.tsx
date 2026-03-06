@@ -20,16 +20,23 @@ export function ResumeScanner() {
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [expandedSection, setExpandedSection] = useState<string | null>('advantages')
 
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      setUploadedFile(file)
+      setResumeText('')
+      toast.success(`PDF loaded: ${file.name}`)
+    } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
       const text = await file.text()
       setResumeText(text)
+      setUploadedFile(null)
       toast.success('Resume text loaded!')
     } else {
-      toast.error('Please upload a .txt file, or paste your resume text directly.')
+      toast.error('Please upload a PDF or .txt file.')
     }
   }, [])
 
