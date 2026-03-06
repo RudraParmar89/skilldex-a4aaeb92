@@ -20,22 +20,29 @@ export function ResumeScanner() {
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [expandedSection, setExpandedSection] = useState<string | null>('advantages')
 
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      setUploadedFile(file)
+      setResumeText('')
+      toast.success(`PDF loaded: ${file.name}`)
+    } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
       const text = await file.text()
       setResumeText(text)
+      setUploadedFile(null)
       toast.success('Resume text loaded!')
     } else {
-      toast.error('Please upload a .txt file, or paste your resume text directly.')
+      toast.error('Please upload a PDF or .txt file.')
     }
   }, [])
 
   const analyzeResume = useCallback(async () => {
-    if (resumeText.trim().length < 20) {
-      toast.error('Please enter at least 20 characters of resume content.')
+    if (!uploadedFile && resumeText.trim().length < 20) {
+      toast.error('Please upload a PDF or enter at least 20 characters of resume content.')
       return
     }
 
@@ -43,9 +50,17 @@ export function ResumeScanner() {
     setResult(null)
 
     try {
-      const { data, error } = await supabase.functions.invoke('analyze-resume', {
-        body: { resumeText: resumeText.trim() },
-      })
+      let invokeOptions: any;
+
+      if (uploadedFile) {
+        const formData = new FormData()
+        formData.append('file', uploadedFile)
+        invokeOptions = { body: formData }
+      } else {
+        invokeOptions = { body: { resumeText: resumeText.trim() } }
+      }
+
+      const { data, error } = await supabase.functions.invoke('analyze-resume', invokeOptions)
 
       if (error) {
         throw new Error(error.message || 'Analysis failed')
@@ -63,7 +78,7 @@ export function ResumeScanner() {
     } finally {
       setIsAnalyzing(false)
     }
-  }, [resumeText])
+  }, [resumeText, uploadedFile])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-accent-emerald'
@@ -104,27 +119,45 @@ export function ResumeScanner() {
               <h3 className="text-lg font-bold text-foreground">Resume Content</h3>
               <label className="flex items-center gap-2 text-sm text-accent-indigo font-medium cursor-pointer hover:opacity-80 gentle-animation">
                 <Upload className="w-4 h-4" />
-                Upload .txt
-                <input type="file" accept=".txt" className="hidden" onChange={handleFileUpload} />
+                Upload PDF / TXT
+                <input type="file" accept=".pdf,.txt" className="hidden" onChange={handleFileUpload} />
               </label>
             </div>
 
-            <textarea
-              value={resumeText}
-              onChange={(e) => setResumeText(e.target.value)}
-              placeholder="Paste your resume text here...&#10;&#10;Example:&#10;John Doe&#10;Software Engineer&#10;5 years experience in Python, React, AWS...&#10;Education: B.S. Computer Science..."
-              className="w-full h-64 bg-secondary/50 rounded-xl p-4 text-foreground placeholder:text-muted-foreground/50 border border-border focus:border-accent-indigo focus:ring-1 focus:ring-accent-indigo/20 outline-none resize-none font-mono text-sm leading-relaxed gentle-animation"
-            />
+            {uploadedFile ? (
+              <div className="w-full h-64 bg-secondary/50 rounded-xl p-4 border border-accent-indigo/30 flex flex-col items-center justify-center gap-4">
+                <div className="w-16 h-16 bg-accent-indigo/10 rounded-2xl flex items-center justify-center">
+                  <FileText className="w-8 h-8 text-accent-indigo" />
+                </div>
+                <div className="text-center">
+                  <p className="font-semibold text-foreground">{uploadedFile.name}</p>
+                  <p className="text-sm text-muted-foreground">{(uploadedFile.size / 1024).toFixed(1)} KB</p>
+                </div>
+                <button
+                  onClick={() => setUploadedFile(null)}
+                  className="text-sm text-destructive hover:underline cursor-pointer"
+                >
+                  Remove file
+                </button>
+              </div>
+            ) : (
+              <textarea
+                value={resumeText}
+                onChange={(e) => setResumeText(e.target.value)}
+                placeholder="Paste your resume text here, or upload a PDF above...&#10;&#10;Example:&#10;John Doe&#10;Software Engineer&#10;5 years experience in Python, React, AWS...&#10;Education: B.S. Computer Science..."
+                className="w-full h-64 bg-secondary/50 rounded-xl p-4 text-foreground placeholder:text-muted-foreground/50 border border-border focus:border-accent-indigo focus:ring-1 focus:ring-accent-indigo/20 outline-none resize-none font-mono text-sm leading-relaxed gentle-animation"
+              />
+            )}
 
             <div className="flex items-center justify-between mt-4">
               <span className="text-sm text-muted-foreground">
-                {resumeText.length} characters
+                {uploadedFile ? `PDF ready: ${uploadedFile.name}` : `${resumeText.length} characters`}
               </span>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={analyzeResume}
-                disabled={isAnalyzing || resumeText.trim().length < 20}
+                disabled={isAnalyzing || (!uploadedFile && resumeText.trim().length < 20)}
                 className="gradient-bg text-primary-foreground font-semibold px-8 py-3 rounded-xl hover:opacity-90 gentle-animation cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isAnalyzing ? (
