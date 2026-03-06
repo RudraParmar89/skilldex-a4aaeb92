@@ -152,7 +152,7 @@ export function ResumeScanner() {
 
             <div className="flex items-center justify-between mt-4">
               <span className="text-sm text-muted-foreground">
-                {resumeText.length} characters
+                {uploadedFile ? `PDF ready: ${uploadedFile.name}` : `${resumeText.length} characters`}
               </span>
               <motion.button
                 whileHover={{ scale: 1.02 }}
