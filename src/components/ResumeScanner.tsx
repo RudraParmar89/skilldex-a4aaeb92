@@ -125,12 +125,30 @@ export function ResumeScanner() {
               </label>
             </div>
 
-            <textarea
-              value={resumeText}
-              onChange={(e) => setResumeText(e.target.value)}
-              placeholder="Paste your resume text here...&#10;&#10;Example:&#10;John Doe&#10;Software Engineer&#10;5 years experience in Python, React, AWS...&#10;Education: B.S. Computer Science..."
-              className="w-full h-64 bg-secondary/50 rounded-xl p-4 text-foreground placeholder:text-muted-foreground/50 border border-border focus:border-accent-indigo focus:ring-1 focus:ring-accent-indigo/20 outline-none resize-none font-mono text-sm leading-relaxed gentle-animation"
-            />
+            {uploadedFile ? (
+              <div className="w-full h-64 bg-secondary/50 rounded-xl p-4 border border-accent-indigo/30 flex flex-col items-center justify-center gap-4">
+                <div className="w-16 h-16 bg-accent-indigo/10 rounded-2xl flex items-center justify-center">
+                  <FileText className="w-8 h-8 text-accent-indigo" />
+                </div>
+                <div className="text-center">
+                  <p className="font-semibold text-foreground">{uploadedFile.name}</p>
+                  <p className="text-sm text-muted-foreground">{(uploadedFile.size / 1024).toFixed(1)} KB</p>
+                </div>
+                <button
+                  onClick={() => setUploadedFile(null)}
+                  className="text-sm text-destructive hover:underline cursor-pointer"
+                >
+                  Remove file
+                </button>
+              </div>
+            ) : (
+              <textarea
+                value={resumeText}
+                onChange={(e) => setResumeText(e.target.value)}
+                placeholder="Paste your resume text here, or upload a PDF above...&#10;&#10;Example:&#10;John Doe&#10;Software Engineer&#10;5 years experience in Python, React, AWS...&#10;Education: B.S. Computer Science..."
+                className="w-full h-64 bg-secondary/50 rounded-xl p-4 text-foreground placeholder:text-muted-foreground/50 border border-border focus:border-accent-indigo focus:ring-1 focus:ring-accent-indigo/20 outline-none resize-none font-mono text-sm leading-relaxed gentle-animation"
+              />
+            )}
 
             <div className="flex items-center justify-between mt-4">
               <span className="text-sm text-muted-foreground">
