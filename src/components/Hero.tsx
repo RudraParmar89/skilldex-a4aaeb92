@@ -22,7 +22,7 @@ export function Hero() {
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Capabilities', href: '#capabilities' },
     { label: 'Stats', href: '#stats' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Scanner', href: '#scanner' },
   ]
 
   return (
