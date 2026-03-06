@@ -70,7 +70,7 @@ export function Hero() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
                 className="hidden sm:flex items-center gap-2 gradient-bg text-primary-foreground font-semibold px-5 py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer text-sm"
               >
                 Get Started <ArrowRight className="w-4 h-4" />
