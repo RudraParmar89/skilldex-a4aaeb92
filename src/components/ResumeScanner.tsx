@@ -79,7 +79,7 @@ export function ResumeScanner() {
     } finally {
       setIsAnalyzing(false)
     }
-  }, [resumeText])
+  }, [resumeText, uploadedFile])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-accent-emerald'
