@@ -158,7 +158,7 @@ export function ResumeScanner() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={analyzeResume}
-                disabled={isAnalyzing || resumeText.trim().length < 20}
+                disabled={isAnalyzing || (!uploadedFile && resumeText.trim().length < 20)}
                 className="gradient-bg text-primary-foreground font-semibold px-8 py-3 rounded-xl hover:opacity-90 gentle-animation cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isAnalyzing ? (
