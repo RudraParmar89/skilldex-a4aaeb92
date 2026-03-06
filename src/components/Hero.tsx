@@ -110,7 +110,7 @@ export function Hero() {
             </a>
           ))}
           <button
-            onClick={() => { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false) }}
+            onClick={() => { document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false) }}
             className="gradient-bg text-primary-foreground font-semibold px-6 py-3 rounded-lg mt-4 cursor-pointer"
           >
             Get Started
