@@ -35,7 +35,7 @@ const features = [
   {
     icon: MessageSquareText,
     title: 'Interview Question Generation',
-    description: 'AI generates role-specific interview questions based on the candidate's profile and identified gaps.',
+    description: "AI generates role-specific interview questions based on the candidate's profile and identified gaps.",
     color: 'bg-accent-teal/10 text-accent-teal',
   },
 ]
