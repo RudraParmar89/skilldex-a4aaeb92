@@ -1,14 +1,12 @@
 import { motion } from 'framer-motion'
-import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3, Headphones, LogIn, LogOut, User } from 'lucide-react'
+import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3, Headphones } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
+import { AuthDropdown } from './AuthDropdown'
 
 export function Hero() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const navigate = useNavigate()
-  const { user, signOut } = useAuth()
+  
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
@@ -27,12 +25,10 @@ export function Hero() {
     { label: 'Capabilities', href: '#capabilities' },
     { label: 'Stats', href: '#stats' },
     { label: 'Scanner', href: '#scanner' },
+    { label: 'Contact', href: '#contact' },
   ]
 
-  const handleSignOut = async () => {
-    await signOut()
-    setIsMobileMenuOpen(false)
-  }
+
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
@@ -87,37 +83,10 @@ export function Hero() {
                 <Headphones className="w-5 h-5" />
               </motion.button>
 
-              {/* Auth Button */}
-              {user ? (
-                <div className="hidden sm:flex items-center gap-2">
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary">
-                    <div className="w-6 h-6 gradient-bg rounded-full flex items-center justify-center">
-                      <User className="w-3.5 h-3.5 text-primary-foreground" />
-                    </div>
-                    <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
-                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
-                    </span>
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleSignOut}
-                    className="p-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 gentle-animation cursor-pointer"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </motion.button>
-                </div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate('/auth')}
-                  className="hidden sm:flex items-center gap-2 gradient-bg text-primary-foreground font-semibold px-5 py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer text-sm"
-                >
-                  <LogIn className="w-4 h-4" /> Login
-                </motion.button>
-              )}
+              {/* Auth Dropdown */}
+              <div className="hidden sm:block">
+                <AuthDropdown />
+              </div>
 
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -158,21 +127,9 @@ export function Hero() {
           >
             <Headphones className="w-5 h-5" /> Support
           </a>
-          {user ? (
-            <button
-              onClick={handleSignOut}
-              className="px-4 py-3 text-destructive hover:bg-destructive/10 rounded-lg font-medium text-lg flex items-center gap-2"
-            >
-              <LogOut className="w-5 h-5" /> Sign Out
-            </button>
-          ) : (
-            <button
-              onClick={() => { navigate('/auth'); setIsMobileMenuOpen(false) }}
-              className="gradient-bg text-primary-foreground font-semibold px-6 py-3 rounded-lg mt-4 cursor-pointer flex items-center justify-center gap-2"
-            >
-              <LogIn className="w-5 h-5" /> Login
-            </button>
-          )}
+          <div className="mt-4">
+            <AuthDropdown />
+          </div>
         </div>
       </motion.div>
 
