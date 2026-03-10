@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Send, Loader2, Mail, User, MessageSquare, CheckCircle2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
+import { BlurReveal, MagneticButton, TextShimmer, Aurora } from './reactbits'
 
 export function ContactForm() {
   const [name, setName] = useState('')
@@ -38,50 +39,54 @@ export function ContactForm() {
   }
 
   return (
-    <section id="contact" className="relative py-24 bg-background">
+    <section id="contact" className="relative py-24 bg-background overflow-hidden">
+      <Aurora intensity="subtle" />
       <div className="absolute inset-0 dot-pattern opacity-20" />
       <div className="relative z-10 container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center gap-2 bg-accent-indigo/10 text-accent-indigo px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
-              <MessageSquare className="w-4 h-4" />
-              Get in Touch
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight mb-4">
-              Let's Start a <span className="gradient-text">Conversation</span>
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              Have questions about SkillDex? Want to discuss how AI-powered resume analysis can transform your hiring process? We'd love to hear from you.
-            </p>
-            <div className="space-y-4">
-              {[
-                { icon: Mail, text: 'support@skilldex.ai', label: 'Email us anytime' },
-                { icon: MessageSquare, text: 'Live Chat', label: 'Available Mon-Fri, 9am-6pm' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center shrink-0">
-                    <item.icon className="w-5 h-5 text-primary-foreground" />
+          <div>
+            <BlurReveal direction="left">
+              <div className="inline-flex items-center gap-2 bg-accent-indigo/10 text-accent-indigo px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+                <MessageSquare className="w-4 h-4" />
+                Get in Touch
+              </div>
+            </BlurReveal>
+            <BlurReveal delay={0.1} direction="left">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight mb-4">
+                Let's Start a{' '}
+                <TextShimmer className="text-3xl sm:text-4xl font-extrabold" duration={5}>
+                  Conversation
+                </TextShimmer>
+              </h2>
+            </BlurReveal>
+            <BlurReveal delay={0.2} direction="left">
+              <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+                Have questions about SkillDex? Want to discuss how AI-powered resume analysis can transform your hiring process? We'd love to hear from you.
+              </p>
+            </BlurReveal>
+            <BlurReveal delay={0.3} direction="left">
+              <div className="space-y-4">
+                {[
+                  { icon: Mail, text: 'support@skilldex.ai', label: 'Email us anytime' },
+                  { icon: MessageSquare, text: 'Live Chat', label: 'Available Mon-Fri, 9am-6pm' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center shrink-0">
+                      <item.icon className="w-5 h-5 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-foreground text-sm">{item.text}</div>
+                      <div className="text-xs text-muted-foreground">{item.label}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-semibold text-foreground text-sm">{item.text}</div>
-                    <div className="text-xs text-muted-foreground">{item.label}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+                ))}
+              </div>
+            </BlurReveal>
+          </div>
 
           {/* Right - Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
+          <BlurReveal delay={0.2} direction="right">
             {sent ? (
               <div className="bg-card rounded-2xl clean-border card-shadow p-10 text-center">
                 <div className="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
@@ -143,17 +148,17 @@ export function ContactForm() {
                   />
                 </div>
 
-                <button
+                <MagneticButton
                   type="submit"
                   disabled={loading}
                   className="w-full gradient-bg text-primary-foreground font-semibold py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   Send Message
-                </button>
+                </MagneticButton>
               </form>
             )}
-          </motion.div>
+          </BlurReveal>
         </div>
       </div>
     </section>

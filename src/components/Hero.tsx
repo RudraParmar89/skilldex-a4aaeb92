@@ -2,11 +2,11 @@ import { motion } from 'framer-motion'
 import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3, Headphones } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { AuthDropdown } from './AuthDropdown'
+import { SplitText, MagneticButton, Aurora, Particles, TextShimmer, BlurReveal } from './reactbits'
 
 export function Hero() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
@@ -28,18 +28,16 @@ export function Hero() {
     { label: 'Contact', href: '#contact' },
   ]
 
-
-
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
-      {/* Background */}
-      <div className="absolute inset-0 mesh-gradient" />
-      <div className="absolute inset-0 dot-pattern opacity-30" />
+      {/* Aurora Background */}
+      <Aurora intensity="subtle" />
       
-      {/* Floating orbs */}
-      <div className="absolute top-20 right-[15%] w-72 h-72 bg-accent-indigo/10 rounded-full blur-3xl float-gentle" />
-      <div className="absolute bottom-20 left-[10%] w-96 h-96 bg-accent-teal/8 rounded-full blur-3xl float-gentle" style={{ animationDelay: '2s' }} />
-      <div className="absolute top-1/2 right-[5%] w-48 h-48 bg-accent-purple/8 rounded-full blur-2xl float-gentle" style={{ animationDelay: '4s' }} />
+      {/* Particles */}
+      <Particles count={35} speed={0.2} />
+
+      {/* Background patterns */}
+      <div className="absolute inset-0 dot-pattern opacity-20" />
 
       {/* Navbar */}
       <motion.nav
@@ -72,7 +70,6 @@ export function Hero() {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Contact/Support Icon */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -83,7 +80,6 @@ export function Hero() {
                 <Headphones className="w-5 h-5" />
               </motion.button>
 
-              {/* Auth Dropdown */}
               <div className="hidden sm:block">
                 <AuthDropdown />
               </div>
@@ -137,61 +133,64 @@ export function Hero() {
       <div className="relative z-10 flex items-center min-h-screen px-6 sm:px-8 lg:px-12 pt-24">
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-accent-indigo/10 text-accent-indigo px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
-              <Brain className="w-4 h-4" />
-              AI-Powered Recruitment
-            </div>
+          <div>
+            <BlurReveal delay={0.1}>
+              <div className="inline-flex items-center gap-2 bg-accent-indigo/10 text-accent-indigo px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+                <Brain className="w-4 h-4" />
+                AI-Powered Recruitment
+              </div>
+            </BlurReveal>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.05] mb-6 text-foreground tracking-tight">
-              Resume Intelligence,{' '}
-              <span className="gradient-text">Reimagined</span>
+              <SplitText text="Resume Intelligence," delay={0.3} staggerDelay={0.03} />
+              <br />
+              <TextShimmer className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold" duration={5}>
+                Reimagined
+              </TextShimmer>
             </h1>
 
-            <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed mb-8 max-w-xl">
-              SkillDex uses NLP and semantic analysis to intelligently screen resumes, rank candidates, 
-              and identify skill gaps — moving beyond simple keyword matching.
-            </p>
+            <BlurReveal delay={0.8}>
+              <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed mb-8 max-w-xl">
+                SkillDex uses NLP and semantic analysis to intelligently screen resumes, rank candidates, 
+                and identify skill gaps — moving beyond simple keyword matching.
+              </p>
+            </BlurReveal>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
-                className="gradient-bg text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 gentle-animation cursor-pointer flex items-center justify-center gap-2"
-              >
-                Try Scanner Free <ArrowRight className="w-4 h-4" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-card text-foreground font-semibold px-8 py-3.5 rounded-xl clean-border hover:bg-secondary gentle-animation cursor-pointer"
-              >
-                See How It Works
-              </motion.button>
-            </div>
+            <BlurReveal delay={1.0}>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <MagneticButton
+                  onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="gradient-bg text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 gentle-animation cursor-pointer flex items-center justify-center gap-2"
+                >
+                  Try Scanner Free <ArrowRight className="w-4 h-4" />
+                </MagneticButton>
+                <MagneticButton
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-card text-foreground font-semibold px-8 py-3.5 rounded-xl clean-border hover:bg-secondary gentle-animation cursor-pointer"
+                >
+                  See How It Works
+                </MagneticButton>
+              </div>
+            </BlurReveal>
 
             {/* Quick stats */}
-            <div className="flex items-center gap-8 mt-10 pt-8 border-t border-border">
-              <div>
-                <div className="text-2xl font-bold text-foreground">95%</div>
-                <div className="text-sm text-muted-foreground">Screening Accuracy</div>
+            <BlurReveal delay={1.2}>
+              <div className="flex items-center gap-8 mt-10 pt-8 border-t border-border">
+                <div>
+                  <div className="text-2xl font-bold text-foreground">95%</div>
+                  <div className="text-sm text-muted-foreground">Screening Accuracy</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-foreground">10x</div>
+                  <div className="text-sm text-muted-foreground">Faster Hiring</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-foreground">Zero</div>
+                  <div className="text-sm text-muted-foreground">Bias Tolerance</div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">10x</div>
-                <div className="text-sm text-muted-foreground">Faster Hiring</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">Zero</div>
-                <div className="text-sm text-muted-foreground">Bias Tolerance</div>
-              </div>
-            </div>
-          </motion.div>
+            </BlurReveal>
+          </div>
 
           {/* Right - Visual */}
           <motion.div

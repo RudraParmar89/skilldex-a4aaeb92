@@ -192,6 +192,22 @@
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 250% 50%; }
+    50% { background-position: 0% 50%; }
+  }
+
+  @keyframes gradientRotate {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes auroraMove {
+    0% { transform: translate(0%, 0%) rotate(0deg); }
+    100% { transform: translate(5%, 3%) rotate(3deg); }
+  }
   
   .float-gentle {
     animation: float-gentle 6s ease-in-out infinite;
