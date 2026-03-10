@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
-import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3, Headphones, LogIn, LogOut, User } from 'lucide-react'
+import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3, Headphones } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
+import { AuthDropdown } from './AuthDropdown'
 
 export function Hero() {
   const [isScrolled, setIsScrolled] = useState(false)
