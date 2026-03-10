@@ -27,10 +27,7 @@ export function Hero() {
     { label: 'Scanner', href: '#scanner' },
   ]
 
-  const handleSignOut = async () => {
-    await signOut()
-    setIsMobileMenuOpen(false)
-  }
+
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
