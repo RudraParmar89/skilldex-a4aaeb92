@@ -6,8 +6,7 @@ import { AuthDropdown } from './AuthDropdown'
 export function Hero() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const navigate = useNavigate()
-  const { user, signOut } = useAuth()
+  
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
