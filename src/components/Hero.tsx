@@ -1,10 +1,14 @@
 import { motion } from 'framer-motion'
-import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3 } from 'lucide-react'
+import { Menu, X, ArrowRight, Brain, FileSearch, BarChart3, Headphones, LogIn, LogOut, User } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 
 export function Hero() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const navigate = useNavigate()
+  const { user, signOut } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
@@ -24,6 +28,11 @@ export function Hero() {
     { label: 'Stats', href: '#stats' },
     { label: 'Scanner', href: '#scanner' },
   ]
+
+  const handleSignOut = async () => {
+    await signOut()
+    setIsMobileMenuOpen(false)
+  }
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
@@ -66,15 +75,49 @@ export function Hero() {
               ))}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {/* Contact/Support Icon */}
               <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
-                className="hidden sm:flex items-center gap-2 gradient-bg text-primary-foreground font-semibold px-5 py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer text-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.open('mailto:support@skilldex.ai', '_blank')}
+                className="p-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary gentle-animation cursor-pointer"
+                title="Contact Support"
               >
-                Get Started <ArrowRight className="w-4 h-4" />
+                <Headphones className="w-5 h-5" />
               </motion.button>
+
+              {/* Auth Button */}
+              {user ? (
+                <div className="hidden sm:flex items-center gap-2">
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary">
+                    <div className="w-6 h-6 gradient-bg rounded-full flex items-center justify-center">
+                      <User className="w-3.5 h-3.5 text-primary-foreground" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
+                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                    </span>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleSignOut}
+                    className="p-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 gentle-animation cursor-pointer"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-5 h-5" />
+                  </motion.button>
+                </div>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => navigate('/auth')}
+                  className="hidden sm:flex items-center gap-2 gradient-bg text-primary-foreground font-semibold px-5 py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer text-sm"
+                >
+                  <LogIn className="w-4 h-4" /> Login
+                </motion.button>
+              )}
 
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -109,12 +152,27 @@ export function Hero() {
               {link.label}
             </a>
           ))}
-          <button
-            onClick={() => { document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false) }}
-            className="gradient-bg text-primary-foreground font-semibold px-6 py-3 rounded-lg mt-4 cursor-pointer"
+          <a
+            href="mailto:support@skilldex.ai"
+            className="px-4 py-3 text-foreground hover:bg-secondary rounded-lg font-medium text-lg flex items-center gap-2"
           >
-            Get Started
-          </button>
+            <Headphones className="w-5 h-5" /> Support
+          </a>
+          {user ? (
+            <button
+              onClick={handleSignOut}
+              className="px-4 py-3 text-destructive hover:bg-destructive/10 rounded-lg font-medium text-lg flex items-center gap-2"
+            >
+              <LogOut className="w-5 h-5" /> Sign Out
+            </button>
+          ) : (
+            <button
+              onClick={() => { navigate('/auth'); setIsMobileMenuOpen(false) }}
+              className="gradient-bg text-primary-foreground font-semibold px-6 py-3 rounded-lg mt-4 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-5 h-5" /> Login
+            </button>
+          )}
         </div>
       </motion.div>
 
@@ -186,7 +244,6 @@ export function Hero() {
             className="hidden lg:block relative"
           >
             <div className="relative">
-              {/* Main card */}
               <div className="bg-card rounded-2xl clean-border card-shadow p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-3 h-3 rounded-full bg-destructive" />
@@ -196,7 +253,6 @@ export function Hero() {
                 </div>
                 
                 <div className="space-y-4">
-                  {/* Candidate row */}
                   {[
                     { name: 'Sarah Chen', score: 94, skills: ['Python', 'NLP', 'TensorFlow'], color: 'bg-accent-emerald' },
                     { name: 'James Wilson', score: 87, skills: ['React', 'Node.js', 'AWS'], color: 'bg-accent-blue' },
@@ -231,7 +287,6 @@ export function Hero() {
                 </div>
               </div>
 
-              {/* Floating badges */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
