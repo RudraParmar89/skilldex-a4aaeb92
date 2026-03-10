@@ -25,6 +25,7 @@ export function Hero() {
     { label: 'Capabilities', href: '#capabilities' },
     { label: 'Stats', href: '#stats' },
     { label: 'Scanner', href: '#scanner' },
+    { label: 'Contact', href: '#contact' },
   ]
 
 
