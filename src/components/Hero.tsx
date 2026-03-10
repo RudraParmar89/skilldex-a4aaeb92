@@ -126,21 +126,9 @@ export function Hero() {
           >
             <Headphones className="w-5 h-5" /> Support
           </a>
-          {user ? (
-            <button
-              onClick={handleSignOut}
-              className="px-4 py-3 text-destructive hover:bg-destructive/10 rounded-lg font-medium text-lg flex items-center gap-2"
-            >
-              <LogOut className="w-5 h-5" /> Sign Out
-            </button>
-          ) : (
-            <button
-              onClick={() => { navigate('/auth'); setIsMobileMenuOpen(false) }}
-              className="gradient-bg text-primary-foreground font-semibold px-6 py-3 rounded-lg mt-4 cursor-pointer flex items-center justify-center gap-2"
-            >
-              <LogIn className="w-5 h-5" /> Login
-            </button>
-          )}
+          <div className="mt-4">
+            <AuthDropdown />
+          </div>
         </div>
       </motion.div>
 

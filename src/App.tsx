@@ -5,10 +5,12 @@ import { HowItWorks } from './components/HowItWorks'
 import { Capabilities } from './components/Capabilities'
 import { Stats } from './components/Stats'
 import { ResumeScanner } from './components/ResumeScanner'
+import { ContactForm } from './components/ContactForm'
 import { Footer } from './components/Footer'
 import { Toaster } from 'sonner'
 import Auth from './pages/Auth'
 import ResetPassword from './pages/ResetPassword'
+import Profile from './pages/Profile'
 
 function HomePage() {
   return (
@@ -19,6 +21,7 @@ function HomePage() {
       <Capabilities />
       <Stats />
       <ResumeScanner />
+      <ContactForm />
       <Footer />
     </>
   )
@@ -32,6 +35,7 @@ export default function App() {
         <Route path="/" element={<main className="relative" role="main"><HomePage /></main>} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   )
