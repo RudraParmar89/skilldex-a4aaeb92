@@ -82,37 +82,10 @@ export function Hero() {
                 <Headphones className="w-5 h-5" />
               </motion.button>
 
-              {/* Auth Button */}
-              {user ? (
-                <div className="hidden sm:flex items-center gap-2">
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary">
-                    <div className="w-6 h-6 gradient-bg rounded-full flex items-center justify-center">
-                      <User className="w-3.5 h-3.5 text-primary-foreground" />
-                    </div>
-                    <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
-                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
-                    </span>
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleSignOut}
-                    className="p-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 gentle-animation cursor-pointer"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </motion.button>
-                </div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate('/auth')}
-                  className="hidden sm:flex items-center gap-2 gradient-bg text-primary-foreground font-semibold px-5 py-2.5 rounded-lg hover:opacity-90 gentle-animation cursor-pointer text-sm"
-                >
-                  <LogIn className="w-4 h-4" /> Login
-                </motion.button>
-              )}
+              {/* Auth Dropdown */}
+              <div className="hidden sm:block">
+                <AuthDropdown />
+              </div>
 
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
